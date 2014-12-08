@@ -18,11 +18,14 @@ MongoClient.connect("mongodb://localhost:27017/searchdb", function(err, db) {
         var bulk=collection.initializeUnorderedBulkOp();
         fs.readdir('downloaded-files', function(err, files) {
             var htmlpages=files.filter(function(file) { return file.substr(-5) === '.html'; });
-            async.each(htmlpages,function(file,callback){
+            async.each(htmlpages.slice(0,10000),function(file,callback){
                 fs.readFile('downloaded-files/'+file, 'utf-8', function(err, contents) {
-                    bulk.insert(indexFiles(contents));
-                    callback();
-                });
+                    if(!err){
+                        console.log(this.fileName);
+                        bulk.insert(indexFiles(contents));
+                        callback();
+                    }
+                }.bind({fileName:file}));
             },function(err){
                 if( err ) { return console.log(err); }
                 bulk.execute(function(err,result){
@@ -43,7 +46,7 @@ MongoClient.connect("mongodb://localhost:27017/searchdb", function(err, db) {
 
 
 function indexFiles(contents){
-    var $=cheerio.load(contents,{normalizeWhitespace:true});
+    var $=cheerio.load(contents);
     var title=$('.vestgoretext h1').text();
     var content=$('.glavenText').text();
     return {title:title,content:content};
