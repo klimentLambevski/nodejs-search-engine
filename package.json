@@ -1,0 +1,14 @@
+{
+  "name"         : "node-search-engine",
+  "version"      : "0.0.1",
+  "description"  : "Search web page",
+  "main"         : "server.js",
+  "author"       : "Kliment Lambevski",
+  "dependencies" : {
+    "express"    : "latest",
+    "request"    : "latest",
+    "cheerio"    : "latest",
+    "mongodb"    : "latest",
+    "async"      : "latest"
+  }
+}
