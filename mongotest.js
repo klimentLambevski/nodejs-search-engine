@@ -2,9 +2,9 @@ var Db = require('mongodb').Db,
     MongoClient = require('mongodb').MongoClient;
 MongoClient.connect("mongodb://localhost:27017/searchdb", function(err, db) {
     if(!err) {
-        var collection=db.collection('indexes');
+        var collection=db.collection('indexes2');
         console.time('search');
-        collection.find({$text:{$search:'Охридско езеро'}}).limit(5).toArray(function(err,result){
+        collection.find({$text:{$search:'Станија гола'.toLowerCase()}}).toArray(function(err,result){
             console.log(err,result);
             console.timeEnd('search');
            db.close();
