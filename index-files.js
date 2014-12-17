@@ -73,8 +73,8 @@ MongoClient.connect("mongodb://localhost:27017/searchdb", function(err, db) {
         });
         fs.readdir('downloaded-files', function(err, files) {
             var fileBlocks = files.length/filesInBlock;
-            //readFiles(files,null,0,fileBlocks,db);
-            readFilesSync(files,null,db);
+            readFiles(files,null,0,fileBlocks,db);
+            //readFilesSync(files,null,db);
         });
     } else {
         console.log("fail");
