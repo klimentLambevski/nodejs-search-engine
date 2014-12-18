@@ -9,7 +9,7 @@ var filesInBlock = 2000;
 console.time('indexing');
 function readFilesSync(files,bulk,db){
     _(files).each(function(val){
-        var contents=fs.readFileSync("downloaded-files/"+val,'utf-8');
+        var contents=fs.readFileSync("downloaded-files/html/"+val,'utf-8');
         addToArray(contents,val);
     });
 
@@ -29,7 +29,7 @@ function readFilesSync(files,bulk,db){
 function readFiles(files,bulk,currentFileBlock,fileBlocks,db){
 
     async.each(files.slice(currentFileBlock*filesInBlock,currentFileBlock*filesInBlock+filesInBlock),function(file,callback){
-        fs.readFile('downloaded-files/'+file, 'utf-8', function(err, contents) {
+        fs.readFile('downloaded-files/html/'+file, 'utf-8', function(err, contents) {
             if(!err){
                 addToArray(contents,this.fileName);
                 callback();
@@ -71,7 +71,7 @@ MongoClient.connect("mongodb://localhost:27017/searchdb", function(err, db) {
                 console.log(err);
             }
         });
-        fs.readdir('downloaded-files', function(err, files) {
+        fs.readdir('downloaded-files/html/', function(err, files) {
             var fileBlocks = files.length/filesInBlock;
             readFiles(files,null,0,fileBlocks,db);
             //readFilesSync(files,null,db);
@@ -95,10 +95,7 @@ function addToArray(content,filename){
     var allWords=_.transform(content.split(/[\.,\s!\?"':\(\)]+/),function(result,word){
         result.push(word.toLowerCase());
     },[]);
-    var numOccurencies = 0;
-    var currentWord = null;
     var documentLength = allWords.length;
-    var lastIndex = 0;
     var keywords = {};
     for(var i=0;i<allWords.length;i++){
         if(allWords[i].length<4) continue;

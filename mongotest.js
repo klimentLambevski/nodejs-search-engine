@@ -6,13 +6,13 @@ MongoClient.connect("mongodb://localhost:27017/searchdb", function(err, db) {
     if(!err) {
         var collection=db.collection('indexes2');
         console.time('search');
-        var searchText='Станија гола'.toLowerCase();
+        var searchText='земјотрес битола'.toLowerCase();
         collection.find({$text:{$search:searchText}}).toArray(function(err,result){
             console.log(result);
             var files=getRankedScore(result);
             console.log(files);
             _(files).each(function(obj){
-                 console.log(fs.readFileSync('downloaded-files/'+obj.file,'utf-8'));
+                 console.log(fs.readFileSync('downloaded-files/html/'+obj.file,'utf-8'));
             });
             console.timeEnd('search')
             db.close();
@@ -41,7 +41,7 @@ function getRankedScore(result){
     _(restructuredObject).each(function(file,key){
         var fileScore = 0;
         _(file).each(function(val,key){
-            fileScore += (1 + Math.log(val)) * (30000/wordStats[key].count);
+            fileScore += (1 + Math.log(val)) * (30000/wordStats[key].count/2);
         });
         file.rankedScore = fileScore;
 
